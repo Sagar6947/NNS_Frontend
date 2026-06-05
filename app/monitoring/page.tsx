@@ -16,7 +16,7 @@ export default function MonitoringPage() {
 
   const fetchArticles = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/reports');
+      const response = await axios.get('http://localhost:5001/api/articles');
       setArticles(response.data);
     } catch (error) {
       console.error('Failed to fetch articles:', error);
@@ -85,13 +85,16 @@ export default function MonitoringPage() {
             </div>
           </div>
 
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="शीर्षक में खोजें..."
-              className="bg-[#202124] border border-[#2d2e33] text-gray-300 text-sm rounded-md pl-9 pr-3 py-1.5 focus:outline-none focus:border-blue-500 w-[250px]"
-            />
-            <Search className="absolute left-3 top-2 text-gray-500" size={14} />
+          <div className="relative flex items-center gap-4">
+            <div className="text-sm text-gray-400 font-medium">कुल न्यूज़: {articles.length}</div>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="शीर्षक में खोजें..."
+                className="bg-[#202124] border border-[#2d2e33] text-gray-300 text-sm rounded-md pl-9 pr-3 py-1.5 focus:outline-none focus:border-blue-500 w-[250px]"
+              />
+              <Search className="absolute left-3 top-2 text-gray-500" size={14} />
+            </div>
           </div>
         </div>
 
@@ -100,6 +103,7 @@ export default function MonitoringPage() {
           <table className="w-full text-left text-sm text-gray-300">
             <thead className="bg-[#202124] text-xs uppercase text-gray-500 border-b border-[#2d2e33]">
               <tr>
+                <th className="px-4 py-4 font-semibold whitespace-nowrap">क्र.सं. (S.No.)</th>
                 <th className="px-4 py-4 font-semibold whitespace-nowrap">दिनांक</th>
                 <th className="px-4 py-4 font-semibold">समाचार स्रोत</th>
                 <th className="px-4 py-4 font-semibold">कीवर्ड</th>
@@ -116,11 +120,11 @@ export default function MonitoringPage() {
             <tbody className="divide-y divide-[#2d2e33]">
               {loading ? (
                 <tr>
-                  <td colSpan={11} className="px-4 py-8 text-center text-gray-500">लोड हो रहा है... (Loading...)</td>
+                  <td colSpan={12} className="px-4 py-8 text-center text-gray-500">लोड हो रहा है... (Loading...)</td>
                 </tr>
               ) : articles.length === 0 ? (
                 <tr>
-                  <td colSpan={11} className="px-4 py-8 text-center text-gray-500">कोई डेटा नहीं मिला (No data found)</td>
+                  <td colSpan={12} className="px-4 py-8 text-center text-gray-500">कोई डेटा नहीं मिला (No data found)</td>
                 </tr>
               ) : (
                 articles.map((article, idx) => {
@@ -129,12 +133,13 @@ export default function MonitoringPage() {
                   try { keywords = typeof article.matched_keywords === 'string' ? JSON.parse(article.matched_keywords) : article.matched_keywords || []; } catch (e) { }
 
                   return (
-                    <tr key={article.id || article.article_id || idx} className="hover:bg-[#202124]/50 transition-colors">
+                    <tr key={article.article_id || idx} className="hover:bg-[#202124]/50 transition-colors">
+                      <td className="px-4 py-4 text-center font-mono text-gray-400">{idx + 1}</td>
                       <td className="px-4 py-4 whitespace-nowrap text-xs">
-                        {article.evaluated_at || article.ingested_at ? format(new Date(article.evaluated_at || article.ingested_at), 'yyyy-MM-dd') : 'N/A'}
+                        {article.ingested_at ? format(new Date(article.ingested_at), 'yyyy-MM-dd') : 'N/A'}
                       </td>
                       <td className="px-4 py-4">
-                        <div className="font-semibold text-gray-200">{article.source_domain || article.source_name || '-'}</div>
+                        <div className="font-semibold text-gray-200">{article.source_name || article.source_id}</div>
                       </td>
                       <td className="px-4 py-4">
                         {keywords.length > 0 ? (
@@ -144,8 +149,8 @@ export default function MonitoringPage() {
                         ) : '-'}
                       </td>
                       <td className="px-4 py-4">
-                        <div className="font-bold text-white mb-1 line-clamp-2">{article.headline || article.title || 'Untitled Article'}</div>
-                        <div className="text-xs text-gray-500 line-clamp-1">Credibility: {article.credibility_score != null ? Math.round(article.credibility_score) : 'N/A'}/100</div>
+                        <div className="font-bold text-white mb-1 line-clamp-2">{article.title || 'Untitled Article'}</div>
+                        <div className="text-xs text-gray-500 line-clamp-1">{article.purpose_judgment}</div>
                       </td>
                       <td className="px-4 py-4">
                         {getToneVisual(article.narrative_tone)}
@@ -160,7 +165,7 @@ export default function MonitoringPage() {
                       </td>
                       <td className="px-4 py-4 text-xs text-gray-400">Humanity<br />International Report</td>
                       <td className="px-4 py-4 text-center">
-                        <Link href={`/monitoring/${article.id || article.article_id}`} className="p-2 hover:bg-[#2d2e33] rounded-lg transition-colors text-gray-400 hover:text-white group relative inline-block">
+                        <Link href={`/monitoring/${article.article_id}`} className="p-2 hover:bg-[#2d2e33] rounded-lg transition-colors text-gray-400 hover:text-white group relative inline-block">
                           <Expand size={16} />
                           <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black px-2 py-1 rounded text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">देखें</span>
                         </Link>

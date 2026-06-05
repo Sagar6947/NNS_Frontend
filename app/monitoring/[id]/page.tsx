@@ -20,7 +20,7 @@ export default function ArticleDetailsPage() {
 
   const fetchArticle = async (id: string) => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/reports/${id}`);
+      const response = await axios.get(`http://localhost:5001/api/articles/${id}`);
       setArticle(response.data);
     } catch (error) {
       console.error('Failed to fetch article details:', error);
@@ -41,7 +41,17 @@ export default function ArticleDetailsPage() {
     );
   }
 
-  const totalScore = typeof article.credibility_score === 'number' ? Math.round(article.credibility_score) : 35;
+  // Mock score breakdown out of 100 if none exists in DB
+  const scoreData = article.credibility_score ? (typeof article.credibility_score === 'string' ? JSON.parse(article.credibility_score) : article.credibility_score) : {
+    source_authenticity: 7,
+    recommendation_consistency: 6,
+    deliberate_digression: 8,
+    author_pattern: 5,
+    funding_ownership: 9
+  };
+
+  const totalScore = (scoreData.source_authenticity + scoreData.recommendation_consistency + scoreData.deliberate_digression + scoreData.author_pattern + scoreData.funding_ownership);
+  // Default mock total is 35 as per the design if we use the default 7+6+8+5+9=35
 
   const circumference = 2 * Math.PI * 60;
   const strokeDashoffset = circumference - (totalScore / 100) * circumference;
@@ -60,21 +70,12 @@ export default function ArticleDetailsPage() {
     scoreLabel = "मिश्रित (MIXED)";
   }
 
-  let evaluations = article.logic_evaluations || [];
-  if (typeof evaluations === 'string') {
-    try { evaluations = JSON.parse(evaluations); } catch(e) {}
-  }
-
-  const sliders = evaluations.length > 0 ? evaluations.map((e: any) => ({
-    label: "Logic Match",
-    desc: e.logic_text,
-    val: e.matched ? Math.round(e.confidence * 20) : 0
-  })) : [
-    { label: "स्रोत प्रामाणिकता (Source Authenticity)", desc: "स्रोत प्राथमिक है या तृतीयक? उसके पीछे छिपे असली फंडिंग सोर्स का स्तर क्या है।", val: 7 },
-    { label: "स्रोत सुसंगति (Recommendation Consistency)", desc: "क्या विभिन्न उद्धृत स्रोतों के दावों में गंभीर विरोधाभास व विषयांतर मौजूद हैं?", val: 6 },
-    { label: "जानबूझकर भटकाव / नेरेटिव सेटिंग (Deliberate Digression)", desc: "क्या विषयांतर सुनियोजित रूप से भारत के संदर्भ में नकारात्मक नेरेटिव सेट करता है?", val: 8 },
-    { label: "लेखक का पैटर्न (Author Pattern)", desc: "क्या लेखक का इतिहास एकतरफा विमर्श को बढ़ावा देता है?", val: 5 },
-    { label: "फंडिंग व मालिकाना हक़ (Funding & Ownership)", desc: "क्या प्रकाशन संस्थान को भारत-विरोधी विदेशी अनुदान प्राप्त होता है?", val: 9 }
+  const sliders = [
+    { label: "स्रोत प्रामाणिकता (Source Authenticity)", desc: "स्रोत प्राथमिक है या तृतीयक? उसके पीछे छिपे असली फंडिंग सोर्स का स्तर क्या है।", val: scoreData.source_authenticity },
+    { label: "स्रोत सुसंगति (Recommendation Consistency)", desc: "क्या विभिन्न उद्धृत स्रोतों के दावों में गंभीर विरोधाभास व विषयांतर मौजूद हैं?", val: scoreData.recommendation_consistency },
+    { label: "जानबूझकर भटकाव / नेरेटिव सेटिंग (Deliberate Digression)", desc: "क्या विषयांतर सुनियोजित रूप से भारत के संदर्भ में नकारात्मक नेरेटिव सेट करता है?", val: scoreData.deliberate_digression },
+    { label: "लेखक का पैटर्न (Author Pattern)", desc: "क्या लेखक का इतिहास एकतरफा विमर्श को बढ़ावा देता है?", val: scoreData.author_pattern || 5 },
+    { label: "फंडिंग व मालिकाना हक़ (Funding & Ownership)", desc: "क्या प्रकाशन संस्थान को भारत-विरोधी विदेशी अनुदान प्राप्त होता है?", val: scoreData.funding_ownership || 9 }
   ];
 
   return (
@@ -84,10 +85,10 @@ export default function ArticleDetailsPage() {
       </button>
 
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-white mb-2">{article.headline || article.title}</h2>
+        <h2 className="text-2xl font-bold text-white mb-2">{article.title}</h2>
         <div className="text-gray-400 text-sm flex items-center gap-4">
-          <span className="bg-[#202124] px-2 py-1 rounded border border-[#2d2e33]">{article.source_domain || article.source_name || article.source_id || '-'}</span>
-          <span>{article.evaluated_at || article.ingested_at ? new Date(article.evaluated_at || article.ingested_at).toLocaleDateString() : 'N/A'}</span>
+          <span className="bg-[#202124] px-2 py-1 rounded border border-[#2d2e33]">{article.source_name || article.source_id}</span>
+          <span>{article.ingested_at ? new Date(article.ingested_at).toLocaleDateString() : 'N/A'}</span>
           {article.raw_file_url && (
             <a href={article.raw_file_url} target="_blank" rel="noopener noreferrer" className="text-blue-400 flex items-center gap-1 hover:underline">
               <ExternalLink size={14} /> मूल फ़ाइल देखें
@@ -165,63 +166,78 @@ export default function ArticleDetailsPage() {
               {scoreLabel}
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mt-8 w-full">
-              <div className="bg-[#111113] border border-[#2d2e33] rounded p-3 text-center">
-                <span className="text-[10px] text-gray-500 uppercase block mb-1">लाभार्थी देश / संस्था</span>
-                <span className="text-sm text-gray-300 font-medium">Western Lobbies</span>
-              </div>
-              <div className="bg-[#111113] border border-[#2d2e33] rounded p-3 text-center">
-                <span className="text-[10px] text-gray-500 uppercase block mb-1">लेखन का दृष्टिकोण</span>
-                <span className="text-sm text-gray-300 font-medium">Normative (छद्म आदर्शवाद)</span>
-              </div>
-              <div className="bg-[#111113] border border-[#2d2e33] rounded p-3 text-center">
-                <span className="text-[10px] text-gray-500 uppercase block mb-1">राजनीतिक लाभार्थी</span>
-                <span className="text-sm text-gray-300 font-medium">Left-leaning fronts</span>
-              </div>
-              <div className="bg-[#111113] border border-[#2d2e33] rounded p-3 text-center">
-                <span className="text-[10px] text-gray-500 uppercase block mb-1">आर्थिक लाभ / लाभार्थी</span>
-                <span className="text-sm text-gray-300 font-medium">Controlled markets</span>
-              </div>
+            <div className="flex flex-wrap gap-4 mt-8 w-full justify-center">
+              {(() => {
+                 try {
+                    const bens = typeof article.beneficiary_tags === 'string' ? JSON.parse(article.beneficiary_tags) : article.beneficiary_tags;
+                    if (!bens || bens.length === 0) return <div className="text-gray-500 text-sm">No beneficiaries extracted</div>;
+                    return bens.map((b: string, i: number) => (
+                       <div key={i} className="bg-[#111113] border border-[#2d2e33] rounded px-4 py-2 text-center">
+                         <span className="text-[10px] text-gray-500 uppercase block mb-1">संभावित लाभार्थी (Beneficiary)</span>
+                         <span className="text-sm text-gray-300 font-medium">{b}</span>
+                       </div>
+                    ));
+                 } catch(e) {
+                    return <div className="text-gray-500 text-sm">No beneficiaries extracted</div>;
+                 }
+              })()}
             </div>
 
           </div>
 
-          {/* Right Column: Scoring Sliders */}
+          {/* Right Column: Narrative Intelligence Details */}
           <div className="col-span-8 bg-[#1a1b1e] border border-[#2d2e33] rounded-xl p-8 shadow-lg shadow-black/20">
-            <div className="flex justify-between items-start mb-8">
+            <div className="flex justify-between items-start mb-6">
               <div>
-                <h3 className="text-lg font-bold text-white mb-1">बहु-आयामी विश्वसनीयता अंशांकन (Scoring Configuration)</h3>
+                <h3 className="text-lg font-bold text-white mb-1">नैरेटिव इंटेलिजेंस (Narrative Intelligence extracted by AI)</h3>
               </div>
-              <p className="text-xs text-gray-400 max-w-[200px] text-right">अधिकारी इन स्लाइडर्स को डेटा साक्ष्य के आधार पर ओवरराइड कर सकते हैं।</p>
             </div>
 
-            <div className="space-y-8">
-              {sliders.map((slider, i) => (
-                <div key={i}>
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-sm font-bold text-gray-200 flex items-center gap-2">
-                      <LinkIcon size={14} className="text-gray-500" /> {slider.label}
-                    </h4>
-                    <span className="text-sm font-bold text-orange-400">{slider.val}/20</span>
-                  </div>
-                  <p className="text-[11px] text-gray-500 mb-3">{slider.desc}</p>
-                  
-                  {/* Slider Track */}
-                  <div className="h-1.5 w-full bg-[#111113] rounded-full overflow-hidden relative">
-                    <div 
-                      className="absolute top-0 left-0 h-full bg-gradient-to-r from-orange-600 to-orange-400 rounded-full" 
-                      style={{ width: `${(slider.val / 20) * 100}%` }}
-                    ></div>
-                  </div>
-                  {/* Slider Thumb (Visual Only) */}
-                  <div className="relative w-full -mt-2">
-                    <div 
-                      className="absolute w-3 h-3 bg-orange-400 rounded-full border-2 border-[#1a1b1e] shadow transform -translate-x-1.5"
-                      style={{ left: `${(slider.val / 20) * 100}%` }}
-                    ></div>
-                  </div>
+            <div className="space-y-6">
+              <div>
+                <h4 className="text-sm font-bold text-gray-400 mb-2 uppercase tracking-wider">Purpose & Intent</h4>
+                <p className="text-gray-200 bg-[#202124] border border-[#2d2e33] p-4 rounded-lg leading-relaxed text-sm">
+                  {article.purpose_judgment || "No purpose judgment recorded."}
+                </p>
+              </div>
+
+              <div>
+                <h4 className="text-sm font-bold text-gray-400 mb-2 uppercase tracking-wider">Matched Master Keywords</h4>
+                <div className="flex flex-wrap gap-2">
+                  {(() => {
+                     try {
+                        const kws = typeof article.matched_keywords === 'string' ? JSON.parse(article.matched_keywords) : article.matched_keywords;
+                        if (!kws || kws.length === 0) return <span className="text-gray-500">None detected</span>;
+                        return kws.map((k: string, i: number) => (
+                           <span key={i} className="bg-orange-500/20 text-orange-400 px-3 py-1 rounded text-xs font-bold border border-orange-500/20">{k}</span>
+                        ));
+                     } catch(e) {
+                        return <span className="text-gray-500">None detected</span>;
+                     }
+                  })()}
                 </div>
-              ))}
+              </div>
+
+              <div>
+                <h4 className="text-sm font-bold text-gray-400 mb-2 uppercase tracking-wider">Extracted Claims</h4>
+                <ul className="space-y-3">
+                  {(() => {
+                     try {
+                        const claims = typeof article.claims === 'string' ? JSON.parse(article.claims) : article.claims;
+                        if (!claims || claims.length === 0) return <li className="text-gray-500">No specific claims extracted</li>;
+                        return claims.map((c: any, i: number) => (
+                           <li key={i} className="bg-[#111113] border border-[#2d2e33] p-3 rounded-lg text-sm text-gray-300">
+                             <div className="font-semibold text-white mb-1">Claim: {c.claim || c}</div>
+                             {c.cited_source && <div className="text-xs text-blue-400 font-mono">Source cited: {c.cited_source}</div>}
+                           </li>
+                        ));
+                     } catch(e) {
+                        return <li className="text-gray-500">No specific claims extracted</li>;
+                     }
+                  })()}
+                </ul>
+              </div>
+
             </div>
 
           </div>

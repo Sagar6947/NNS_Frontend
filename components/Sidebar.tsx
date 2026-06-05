@@ -1,3 +1,5 @@
+"use client";
+
 import Link from 'next/link';
 import { 
   BarChart3, 
@@ -7,10 +9,20 @@ import {
   FileText, 
   Share2, 
   UploadCloud, 
-  Settings 
+  Settings,
+  LogOut,
+  MonitorPlay
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function Sidebar() {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('nns_token');
+    localStorage.removeItem('nns_user');
+    router.push('/login');
+  };
   return (
     <div className="w-64 h-screen bg-[#1a1b1e] border-r border-[#2d2e33] flex flex-col">
       <div className="p-6 flex items-center gap-3">
@@ -46,20 +58,30 @@ export default function Sidebar() {
           <span>ई-पेपर (C1.1)</span>
         </Link>
 
+        <Link href="/portal" className="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+          <MonitorPlay size={20} />
+          <span>न्यूज़ पोर्टल (C1.2)</span>
+        </Link>
+
         {/* <Link href="/social" className="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
           <Share2 size={20} />
           <span>सोशल मीडिया (C1.3)</span>
         </Link> */}
+
+        <Link href="/reports" className="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+          <BarChart3 size={20} />
+          <span>रिपोट्स (C4)</span>
+        </Link>
 
         {/* <Link href="/upload" className="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
           <UploadCloud size={20} />
           <span>डायरेक्ट अपलोड<br/><span className="text-xs opacity-70">(C1.4)</span></span>
         </Link> */}
 
-        {/* <Link href="/settings" className="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+        <Link href="/settings" className="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
           <Settings size={20} />
           <span>सिस्टम सेटिंग्स<br/><span className="text-xs opacity-70">(Settings)</span></span>
-        </Link> */}
+        </Link>
       </nav>
 
       <div className="p-4 m-4 rounded-lg bg-[#202124] border border-[#2d2e33]">
@@ -67,7 +89,14 @@ export default function Sidebar() {
           <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
           <span className="text-green-500 font-medium text-sm">लाइव सुरक्षा सक्रिय</span>
         </div>
-        <p className="text-xs text-gray-500">५० पोर्टल और २०० कीवर्ड्स निरंतर स्कैनिंग पर लगे हैं।</p>
+        <p className="text-xs text-gray-500 mb-4">५० पोर्टल और २०० कीवर्ड्स निरंतर स्कैनिंग पर लगे हैं।</p>
+        
+        <button 
+          onClick={handleLogout}
+          className="w-full flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 py-2 rounded-lg transition-colors text-sm font-medium border border-red-500/20"
+        >
+          <LogOut size={16} /> Secure Logout
+        </button>
       </div>
     </div>
   );
