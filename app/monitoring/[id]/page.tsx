@@ -20,7 +20,7 @@ export default function ArticleDetailsPage() {
 
   const fetchArticle = async (id: string) => {
     try {
-      const response = await axios.get(`http://localhost:5001/api/articles/${id}`);
+      const response = await axios.get(`http://127.0.0.1:8000/api/reports/${id}`);
       setArticle(response.data);
     } catch (error) {
       console.error('Failed to fetch article details:', error);
@@ -41,17 +41,7 @@ export default function ArticleDetailsPage() {
     );
   }
 
-  // Mock score breakdown out of 100 if none exists in DB
-  const scoreData = article.credibility_score ? (typeof article.credibility_score === 'string' ? JSON.parse(article.credibility_score) : article.credibility_score) : {
-    source_authenticity: 7,
-    recommendation_consistency: 6,
-    deliberate_digression: 8,
-    author_pattern: 5,
-    funding_ownership: 9
-  };
-
-  const totalScore = (scoreData.source_authenticity + scoreData.recommendation_consistency + scoreData.deliberate_digression + scoreData.author_pattern + scoreData.funding_ownership);
-  // Default mock total is 35 as per the design if we use the default 7+6+8+5+9=35
+  const totalScore = typeof article.credibility_score === 'number' ? Math.round(article.credibility_score) : 35;
 
   const circumference = 2 * Math.PI * 60;
   const strokeDashoffset = circumference - (totalScore / 100) * circumference;
@@ -70,12 +60,21 @@ export default function ArticleDetailsPage() {
     scoreLabel = "मिश्रित (MIXED)";
   }
 
-  const sliders = [
-    { label: "स्रोत प्रामाणिकता (Source Authenticity)", desc: "स्रोत प्राथमिक है या तृतीयक? उसके पीछे छिपे असली फंडिंग सोर्स का स्तर क्या है।", val: scoreData.source_authenticity },
-    { label: "स्रोत सुसंगति (Recommendation Consistency)", desc: "क्या विभिन्न उद्धृत स्रोतों के दावों में गंभीर विरोधाभास व विषयांतर मौजूद हैं?", val: scoreData.recommendation_consistency },
-    { label: "जानबूझकर भटकाव / नेरेटिव सेटिंग (Deliberate Digression)", desc: "क्या विषयांतर सुनियोजित रूप से भारत के संदर्भ में नकारात्मक नेरेटिव सेट करता है?", val: scoreData.deliberate_digression },
-    { label: "लेखक का पैटर्न (Author Pattern)", desc: "क्या लेखक का इतिहास एकतरफा विमर्श को बढ़ावा देता है?", val: scoreData.author_pattern || 5 },
-    { label: "फंडिंग व मालिकाना हक़ (Funding & Ownership)", desc: "क्या प्रकाशन संस्थान को भारत-विरोधी विदेशी अनुदान प्राप्त होता है?", val: scoreData.funding_ownership || 9 }
+  let evaluations = article.logic_evaluations || [];
+  if (typeof evaluations === 'string') {
+    try { evaluations = JSON.parse(evaluations); } catch(e) {}
+  }
+
+  const sliders = evaluations.length > 0 ? evaluations.map((e: any) => ({
+    label: "Logic Match",
+    desc: e.logic_text,
+    val: e.matched ? Math.round(e.confidence * 20) : 0
+  })) : [
+    { label: "स्रोत प्रामाणिकता (Source Authenticity)", desc: "स्रोत प्राथमिक है या तृतीयक? उसके पीछे छिपे असली फंडिंग सोर्स का स्तर क्या है।", val: 7 },
+    { label: "स्रोत सुसंगति (Recommendation Consistency)", desc: "क्या विभिन्न उद्धृत स्रोतों के दावों में गंभीर विरोधाभास व विषयांतर मौजूद हैं?", val: 6 },
+    { label: "जानबूझकर भटकाव / नेरेटिव सेटिंग (Deliberate Digression)", desc: "क्या विषयांतर सुनियोजित रूप से भारत के संदर्भ में नकारात्मक नेरेटिव सेट करता है?", val: 8 },
+    { label: "लेखक का पैटर्न (Author Pattern)", desc: "क्या लेखक का इतिहास एकतरफा विमर्श को बढ़ावा देता है?", val: 5 },
+    { label: "फंडिंग व मालिकाना हक़ (Funding & Ownership)", desc: "क्या प्रकाशन संस्थान को भारत-विरोधी विदेशी अनुदान प्राप्त होता है?", val: 9 }
   ];
 
   return (
@@ -85,10 +84,10 @@ export default function ArticleDetailsPage() {
       </button>
 
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-white mb-2">{article.title}</h2>
+        <h2 className="text-2xl font-bold text-white mb-2">{article.headline || article.title}</h2>
         <div className="text-gray-400 text-sm flex items-center gap-4">
-          <span className="bg-[#202124] px-2 py-1 rounded border border-[#2d2e33]">{article.source_name || article.source_id}</span>
-          <span>{article.ingested_at ? new Date(article.ingested_at).toLocaleDateString() : 'N/A'}</span>
+          <span className="bg-[#202124] px-2 py-1 rounded border border-[#2d2e33]">{article.source_domain || article.source_name || article.source_id || '-'}</span>
+          <span>{article.evaluated_at || article.ingested_at ? new Date(article.evaluated_at || article.ingested_at).toLocaleDateString() : 'N/A'}</span>
           {article.raw_file_url && (
             <a href={article.raw_file_url} target="_blank" rel="noopener noreferrer" className="text-blue-400 flex items-center gap-1 hover:underline">
               <ExternalLink size={14} /> मूल फ़ाइल देखें
