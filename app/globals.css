@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #111113;
+  --color-foreground: #ffffff;
+  --color-sidebar: #1a1b1e;
+  --color-card: #202124;
+  --color-border: #2d2e33;
+  --color-primary: #e67e22; /* Orange accent */
+  --color-primary-hover: #d35400;
+  --color-success: #2ecc71;
+  --color-danger: #e74c3c;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
