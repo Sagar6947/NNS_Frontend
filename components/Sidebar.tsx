@@ -64,7 +64,7 @@ export default function Sidebar() {
         {/* <Link href="/credibility" className={getLinkClass('/credibility')}>
           <Scale size={20} />
           <span>क्रेडिबिलिटी स्कोरर<br/><span className="text-xs opacity-70">(C2)</span></span>
-        </Link> */}
+
 
         {/* <Link href="/counter" className={getLinkClass('/counter')}>
           <Megaphone size={20} />
