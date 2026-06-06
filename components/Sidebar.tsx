@@ -86,10 +86,10 @@ export default function Sidebar() {
           <span>सोशल मीडिया (C1.3)</span>
         </Link> */}
 
-        <Link href="/reports" className={getLinkClass('/reports')}>
+        {/* <Link href="/reports" className={getLinkClass('/reports')}>
           <BarChart3 size={20} />
           <span>रिपोट्स (C4)</span>
-        </Link>
+        </Link> */}
 
         {/* <Link href="/upload" className={getLinkClass('/upload')}>
           <UploadCloud size={20} />
