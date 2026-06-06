@@ -1,23 +1,70 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { Download, Play, AlertTriangle, Search, Filter, Expand } from 'lucide-react';
+import { Download, Play, AlertTriangle, Search, Filter, Expand, ChevronLeft, ChevronRight } from 'lucide-react';
 import axios from 'axios';
 import { format } from 'date-fns';
 import Link from 'next/link';
+import MultiSelectDropdown from '@/components/MultiSelectDropdown';
 
 export default function MonitoringPage() {
   const [articles, setArticles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [filtersData, setFiltersData] = useState({ keywords: [], sources: [], sourceTypes: [], tones: [] });
+  const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
+  const [selectedSources, setSelectedSources] = useState<string[]>([]);
+  const [selectedSourceTypes, setSelectedSourceTypes] = useState<string[]>([]);
+  const [selectedTones, setSelectedTones] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalRecords, setTotalRecords] = useState(0);
+  const limit = 20;
+
   useEffect(() => {
-    fetchArticles();
+    fetchFilters();
   }, []);
 
-  const fetchArticles = async () => {
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      fetchArticles();
+    }, 500);
+    return () => clearTimeout(delayDebounceFn);
+  }, [page, selectedKeywords, selectedSources, selectedSourceTypes, selectedTones, searchQuery]);
+
+  const fetchFilters = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'}/api/articles`);
-      setArticles(response.data);
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'}/api/articles/filters`);
+      setFiltersData({
+        keywords: res.data.keywords.map((k: string) => ({ id: k, name: k })),
+        sources: res.data.sources,
+        sourceTypes: res.data.sourceTypes,
+        tones: res.data.tones
+      });
+    } catch (err) {
+      console.error("Failed to fetch filters", err);
+    }
+  };
+
+  const fetchArticles = async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: limit.toString(),
+        search: searchQuery,
+      });
+      if (selectedKeywords.length) params.append('keywords', JSON.stringify(selectedKeywords));
+      if (selectedSources.length) params.append('sources', JSON.stringify(selectedSources));
+      if (selectedSourceTypes.length) params.append('sourceTypes', JSON.stringify(selectedSourceTypes));
+      if (selectedTones.length) params.append('tones', JSON.stringify(selectedTones));
+
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'}/api/articles?${params.toString()}`);
+      setArticles(response.data.articles || response.data);
+      setTotalPages(response.data.totalPages || 1);
+      setTotalRecords(response.data.total || (response.data.articles ? response.data.articles.length : response.data.length));
     } catch (error) {
       console.error('Failed to fetch articles:', error);
     } finally {
@@ -67,31 +114,66 @@ export default function MonitoringPage() {
       <div className="bg-[#1a1b1e] border border-[#2d2e33] rounded-xl overflow-hidden shadow-lg shadow-black/20">
 
         {/* Filters */}
-        <div className="p-4 border-b border-[#2d2e33] bg-[#111113] flex items-center justify-between gap-4">
-          <div className="flex gap-4 items-center">
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-400 font-medium">कीवर्ड फ़िल्टर:</span>
-              <select className="bg-[#202124] border border-[#2d2e33] text-gray-300 text-sm rounded-md px-3 py-1.5 focus:outline-none focus:border-blue-500 min-w-[150px]">
-                <option>सभी कीवर्ड्स (All)</option>
-                <option>Adivasi-Moolnivasi</option>
-              </select>
+        <div className="p-4 border-b border-[#2d2e33] bg-[#111113] flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+          <div className="flex flex-wrap gap-4 items-center flex-1">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <span className="text-xs text-gray-400 font-medium whitespace-nowrap">कीवर्ड (Keywords):</span>
+              <div className="w-[180px] xl:w-[220px]">
+                <MultiSelectDropdown 
+                  options={filtersData.keywords} 
+                  selectedValues={selectedKeywords} 
+                  onChange={(vals) => { setSelectedKeywords(vals); setPage(1); }} 
+                  placeholder="Select Keywords..." 
+                />
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-400 font-medium">नेरेटिव टोन:</span>
-              <select className="bg-[#202124] border border-[#2d2e33] text-gray-300 text-sm rounded-md px-3 py-1.5 focus:outline-none focus:border-blue-500 min-w-[150px]">
-                <option>सभी टोन</option>
-                <option>भारत विरोधी</option>
-              </select>
+            
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <span className="text-xs text-gray-400 font-medium whitespace-nowrap">स्रोत का प्रकार (Source Type):</span>
+              <div className="w-[180px] xl:w-[220px]">
+                <MultiSelectDropdown 
+                  options={filtersData.sourceTypes || []} 
+                  selectedValues={selectedSourceTypes} 
+                  onChange={(vals) => { setSelectedSourceTypes(vals); setPage(1); }} 
+                  placeholder="Select Type..." 
+                />
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <span className="text-xs text-gray-400 font-medium whitespace-nowrap">स्रोत (Sources):</span>
+              <div className="w-[180px] xl:w-[220px]">
+                <MultiSelectDropdown 
+                  options={filtersData.sources} 
+                  selectedValues={selectedSources} 
+                  onChange={(vals) => { setSelectedSources(vals); setPage(1); }} 
+                  placeholder="Select Sources..." 
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <span className="text-xs text-gray-400 font-medium whitespace-nowrap">नेरेटिव टोन:</span>
+              <div className="w-[180px] xl:w-[220px]">
+                <MultiSelectDropdown 
+                  options={filtersData.tones} 
+                  selectedValues={selectedTones} 
+                  onChange={(vals) => { setSelectedTones(vals); setPage(1); }} 
+                  placeholder="Select Tone..." 
+                />
+              </div>
             </div>
           </div>
 
-          <div className="relative flex items-center gap-4">
-            <div className="text-sm text-gray-400 font-medium">कुल न्यूज़: {articles.length}</div>
-            <div className="relative">
+          <div className="relative flex items-center gap-4 w-full xl:w-auto mt-2 xl:mt-0 justify-between xl:justify-end">
+            <div className="text-sm text-gray-400 font-medium whitespace-nowrap shrink-0">कुल न्यूज़: {totalRecords}</div>
+            <div className="relative w-full xl:w-auto">
               <input
                 type="text"
                 placeholder="शीर्षक में खोजें..."
-                className="bg-[#202124] border border-[#2d2e33] text-gray-300 text-sm rounded-md pl-9 pr-3 py-1.5 focus:outline-none focus:border-blue-500 w-[250px]"
+                value={searchQuery}
+                onChange={(e) => { setSearchQuery(e.target.value); setPage(1); }}
+                className="bg-[#202124] border border-[#2d2e33] text-gray-300 text-sm rounded-md pl-9 pr-3 py-1.5 focus:outline-none focus:border-blue-500 w-full xl:w-[250px]"
               />
               <Search className="absolute left-3 top-2 text-gray-500" size={14} />
             </div>
@@ -180,6 +262,30 @@ export default function MonitoringPage() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Pagination */}
+        <div className="p-4 border-t border-[#2d2e33] bg-[#111113] flex items-center justify-between text-sm text-gray-400">
+          <div>
+            Showing {totalRecords === 0 ? 0 : (page - 1) * limit + 1} to {Math.min(page * limit, totalRecords)} of {totalRecords} entries
+          </div>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => setPage(Math.max(1, page - 1))}
+              disabled={page === 1}
+              className="p-1.5 bg-[#202124] border border-[#2d2e33] rounded hover:bg-[#2d2e33] disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <span className="px-3 py-1 bg-[#2d2e33] rounded text-white font-medium">{page} / {Math.max(1, totalPages)}</span>
+            <button 
+              onClick={() => setPage(Math.min(totalPages, page + 1))}
+              disabled={page >= totalPages || totalPages === 0}
+              className="p-1.5 bg-[#202124] border border-[#2d2e33] rounded hover:bg-[#2d2e33] disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
         </div>
 
       </div>
