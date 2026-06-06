@@ -202,10 +202,28 @@ export default function MonitoringPage() {
             <tbody className="divide-y divide-border-subtle">
               {loading ? (
                 Array.from({ length: 5 }).map((_, i) => (
-                  <tr key={i} className="animate-pulse border-b border-border-subtle">
-                    <td colSpan={12} className="px-4 py-4">
-                      <div className="h-12 bg-black/5 dark:bg-white/5 rounded w-full"></div>
+                  <tr key={i} className="animate-pulse border-b border-border-subtle bg-black/5 dark:bg-white/5">
+                    <td className="px-4 py-6 text-center"><div className="h-4 bg-gray-300 dark:bg-[#3f4046] rounded w-8 mx-auto"></div></td>
+                    <td className="px-4 py-6"><div className="h-4 bg-gray-300 dark:bg-[#3f4046] rounded w-20"></div></td>
+                    <td className="px-4 py-6">
+                      <div className="h-4 bg-gray-900 dark:bg-[#3f4046] rounded w-24 mb-2"></div>
+                      <div className="h-3 bg-gray-900 dark:bg-[#2d2e33] rounded w-16"></div>
                     </td>
+                    <td className="px-4 py-6"><div className="h-6 bg-gray-300 dark:bg-[#3f4046] rounded w-16"></div></td>
+                    <td className="px-4 py-6">
+                      <div className="h-5 bg-gray-300 dark:bg-[#3f4046] rounded w-full mb-2"></div>
+                      <div className="h-4 bg-gray-900 dark:bg-[#2d2e33] rounded w-3/4"></div>
+                    </td>
+                    <td className="px-4 py-6"><div className="h-6 bg-gray-300 dark:bg-[#3f4046] rounded w-24"></div></td>
+                    <td className="px-4 py-6"><div className="h-4 bg-gray-300 dark:bg-[#3f4046] rounded w-16 mx-auto"></div></td>
+                    <td className="px-4 py-6"><div className="h-4 bg-gray-300 dark:bg-[#3f4046] rounded w-16 mx-auto"></div></td>
+                    <td className="px-4 py-6"><div className="h-6 bg-gray-300 dark:bg-[#3f4046] rounded w-12 mx-auto"></div></td>
+                    <td className="px-4 py-6"><div className="h-6 bg-gray-300 dark:bg-[#3f4046] rounded w-12 mx-auto"></div></td>
+                    <td className="px-4 py-6">
+                      <div className="h-4 bg-gray-300 dark:bg-[#3f4046] rounded w-20 mb-1 mx-auto"></div>
+                      <div className="h-3 bg-gray-900 dark:bg-[#2d2e33] rounded w-16 mx-auto"></div>
+                    </td>
+                    <td className="px-4 py-6"><div className="h-8 bg-gray-300 dark:bg-[#3f4046] rounded w-8 mx-auto"></div></td>
                   </tr>
                 ))
               ) : articles.length === 0 ? (
