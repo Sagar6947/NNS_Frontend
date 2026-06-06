@@ -17,7 +17,7 @@ export default function MonitoringPage() {
   const [selectedSourceTypes, setSelectedSourceTypes] = useState<string[]>([]);
   const [selectedTones, setSelectedTones] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
@@ -90,7 +90,7 @@ export default function MonitoringPage() {
       <div className="flex justify-between items-start mb-8">
         <div>
           <h2 className="text-2xl font-bold text-text-primary mb-2">घटक १: लाइव न्यूज़ मॉनिटरिंग एवं नेरेटिव मार्किंग</h2>
-          <p className="text-text-muted text-sm">AI तकनीक द्वारा कीवर्ड चिन्हित न्यूज़ की पहचान और भारत-विरोधी विमर्श का स्वचालित आकलन</p>
+          <p className=" text-sm">AI तकनीक द्वारा कीवर्ड चिन्हित न्यूज़ की पहचान और भारत-विरोधी विमर्श का स्वचालित आकलन</p>
         </div>
         <div className="flex gap-3">
           <button className="flex items-center gap-2 bg-bg-card border border-border-subtle hover:bg-black/5 dark:hover:bg-white/5 text-text-secondary px-4 py-2 rounded-lg transition-colors text-sm font-medium">
@@ -103,11 +103,20 @@ export default function MonitoringPage() {
       </div>
 
       {/* High Priority Alert Box */}
-      <div className="mb-8 border border-red-500/30 bg-red-500/10 p-4 rounded-lg flex items-center gap-3">
-        <div className="bg-red-500 text-white px-3 py-1 rounded text-xs font-bold flex items-center gap-1 tracking-wide">
-          <AlertTriangle size={14} /> अति-महत्वपूर्ण अलर्ट
+      <div className="mb-8 relative overflow-hidden bg-white dark:bg-bg-panel border border-red-200 dark:border-red-900/50 p-5 rounded-xl flex items-start gap-4 shadow-lg shadow-red-500/5">
+        <div className="absolute top-0 left-0 w-1.5 h-full bg-red-500"></div>
+        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-red-50 dark:bg-red-500/10 flex items-center justify-center text-red-500 border border-red-100 dark:border-red-500/20">
+          <AlertTriangle size={20} className="animate-pulse" />
         </div>
-        <p className="text-red-600 dark:text-red-300 text-sm font-medium">अलर्ट: प्रमुख विदेशी पोर्टल पर मूलनिवासी विमर्श को लेकर भ्रामक ऐतिहासिक लेख लाइव किया गया।</p>
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <h3 className="text-red-600 dark:text-red-400 font-bold text-sm tracking-wide uppercase">अति-महत्वपूर्ण अलर्ट</h3>
+            <span className="bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400 text-[10px] px-2 py-0.5 rounded-full font-bold">CRITICAL</span>
+          </div>
+          <p className="text-text-secondary dark:text-gray-300 text-sm leading-relaxed mt-0.5">
+            <span className="font-semibold text-text-primary"> प्रमुख विदेशी पोर्टल पर मूलनिवासी विमर्श को लेकर भ्रामक ऐतिहासिक लेख लाइव किया गया।</span>
+          </p>
+        </div>
       </div>
 
       {/* Main Content Area */}
@@ -117,56 +126,56 @@ export default function MonitoringPage() {
         <div className="p-4 border-b border-border-subtle bg-bg-card flex flex-col xl:flex-row xl:items-center justify-between gap-4">
           <div className="flex flex-wrap gap-4 items-center flex-1">
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              <span className="text-xs text-text-muted font-medium whitespace-nowrap">कीवर्ड (Keywords):</span>
+              <span className="text-xs  font-medium whitespace-nowrap">कीवर्ड (Keywords):</span>
               <div className="w-[180px] xl:w-[220px]">
-                <MultiSelectDropdown 
-                  options={filtersData.keywords} 
-                  selectedValues={selectedKeywords} 
-                  onChange={(vals) => { setSelectedKeywords(vals); setPage(1); }} 
-                  placeholder="Select Keywords..." 
-                />
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-2 w-full sm:w-auto">
-              <span className="text-xs text-text-muted font-medium whitespace-nowrap">स्रोत का प्रकार (Source Type):</span>
-              <div className="w-[180px] xl:w-[220px]">
-                <MultiSelectDropdown 
-                  options={filtersData.sourceTypes || []} 
-                  selectedValues={selectedSourceTypes} 
-                  onChange={(vals) => { setSelectedSourceTypes(vals); setPage(1); }} 
-                  placeholder="Select Type..." 
-                />
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-2 w-full sm:w-auto">
-              <span className="text-xs text-text-muted font-medium whitespace-nowrap">स्रोत (Sources):</span>
-              <div className="w-[180px] xl:w-[220px]">
-                <MultiSelectDropdown 
-                  options={filtersData.sources} 
-                  selectedValues={selectedSources} 
-                  onChange={(vals) => { setSelectedSources(vals); setPage(1); }} 
-                  placeholder="Select Sources..." 
+                <MultiSelectDropdown
+                  options={filtersData.keywords}
+                  selectedValues={selectedKeywords}
+                  onChange={(vals) => { setSelectedKeywords(vals); setPage(1); }}
+                  placeholder="Select Keywords..."
                 />
               </div>
             </div>
 
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              <span className="text-xs text-text-muted font-medium whitespace-nowrap">नेरेटिव टोन:</span>
+              <span className="text-xs  font-medium whitespace-nowrap">स्रोत का प्रकार (Source Type):</span>
               <div className="w-[180px] xl:w-[220px]">
-                <MultiSelectDropdown 
-                  options={filtersData.tones} 
-                  selectedValues={selectedTones} 
-                  onChange={(vals) => { setSelectedTones(vals); setPage(1); }} 
-                  placeholder="Select Tone..." 
+                <MultiSelectDropdown
+                  options={filtersData.sourceTypes || []}
+                  selectedValues={selectedSourceTypes}
+                  onChange={(vals) => { setSelectedSourceTypes(vals); setPage(1); }}
+                  placeholder="Select Type..."
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <span className="text-xs  font-medium whitespace-nowrap">स्रोत (Sources):</span>
+              <div className="w-[180px] xl:w-[220px]">
+                <MultiSelectDropdown
+                  options={filtersData.sources}
+                  selectedValues={selectedSources}
+                  onChange={(vals) => { setSelectedSources(vals); setPage(1); }}
+                  placeholder="Select Sources..."
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <span className="text-xs  font-medium whitespace-nowrap">नेरेटिव टोन:</span>
+              <div className="w-[180px] xl:w-[220px]">
+                <MultiSelectDropdown
+                  options={filtersData.tones}
+                  selectedValues={selectedTones}
+                  onChange={(vals) => { setSelectedTones(vals); setPage(1); }}
+                  placeholder="Select Tone..."
                 />
               </div>
             </div>
           </div>
 
           <div className="relative flex items-center gap-4 w-full xl:w-auto mt-2 xl:mt-0 justify-between xl:justify-end">
-            <div className="text-sm text-text-muted font-medium whitespace-nowrap shrink-0">कुल न्यूज़: {totalRecords}</div>
+            <div className="text-sm  font-medium whitespace-nowrap shrink-0">कुल न्यूज़: {totalRecords}</div>
             <div className="relative w-full xl:w-auto">
               <input
                 type="text"
@@ -175,7 +184,7 @@ export default function MonitoringPage() {
                 onChange={(e) => { setSearchQuery(e.target.value); setPage(1); }}
                 className="bg-bg-card border border-border-subtle text-text-primary text-sm rounded-md pl-9 pr-3 py-1.5 focus:outline-none focus:border-blue-500 w-full xl:w-[250px]"
               />
-              <Search className="absolute left-3 top-2 text-text-muted" size={14} />
+              <Search className="absolute left-3 top-2 " size={14} />
             </div>
           </div>
         </div>
@@ -183,7 +192,7 @@ export default function MonitoringPage() {
         {/* Data Table */}
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-text-secondary">
-            <thead className="bg-bg-card text-xs uppercase text-text-muted border-b border-border-subtle">
+            <thead className="bg-bg-card text-xs uppercase  border-b border-border-subtle">
               <tr>
                 <th className="px-4 py-4 font-semibold whitespace-nowrap">क्र.सं. (S.No.)</th>
                 <th className="px-4 py-4 font-semibold whitespace-nowrap">दिनांक</th>
@@ -228,7 +237,7 @@ export default function MonitoringPage() {
                 ))
               ) : articles.length === 0 ? (
                 <tr>
-                  <td colSpan={12} className="px-4 py-8 text-center text-text-muted">कोई डेटा नहीं मिला (No data found)</td>
+                  <td colSpan={12} className="px-4 py-8 text-center ">कोई डेटा नहीं मिला (No data found)</td>
                 </tr>
               ) : (
                 articles.map((article, idx) => {
@@ -237,7 +246,7 @@ export default function MonitoringPage() {
 
                   return (
                     <tr key={article.article_id || idx} className="hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-                      <td className="px-4 py-4 text-center font-mono text-text-muted">{(page - 1) * limit + idx + 1}</td>
+                      <td className="px-4 py-4 text-center font-mono ">{(page - 1) * limit + idx + 1}</td>
                       <td className="px-4 py-4 whitespace-nowrap text-xs">
                         {article.ingested_at ? format(new Date(article.ingested_at), 'yyyy-MM-dd') : 'N/A'}
                       </td>
@@ -253,7 +262,7 @@ export default function MonitoringPage() {
                       </td>
                       <td className="px-4 py-4">
                         <div className="font-bold text-text-primary mb-1 line-clamp-2">{article.title || 'Untitled Article'}</div>
-                        <div className="text-xs text-text-muted line-clamp-1">{article.purpose_judgment}</div>
+                        <div className="text-xs  line-clamp-1">{article.purpose_judgment}</div>
                       </td>
                       <td className="px-4 py-4">
                         {getToneVisual(article.narrative_tone)}
@@ -266,9 +275,9 @@ export default function MonitoringPage() {
                       <td className="px-4 py-4 text-center">
                         <span className="px-2 py-1 bg-red-500/10 text-red-600 dark:text-red-400 font-bold text-xs rounded">YES</span>
                       </td>
-                      <td className="px-4 py-4 text-xs text-text-muted">Humanity<br />International Report</td>
+                      <td className="px-4 py-4 text-xs ">Humanity<br />International Report</td>
                       <td className="px-4 py-4 text-center">
-                        <Link href={`/monitoring/${article.article_id}`} className="p-2 hover:bg-black/10 dark:hover:bg-white/10 rounded-lg transition-colors text-text-muted hover:text-text-primary group relative inline-block">
+                        <Link href={`/monitoring/${article.article_id}`} className="p-2 hover:bg-black/10 dark:hover:bg-white/10 rounded-lg transition-colors  hover:text-text-primary group relative inline-block">
                           <Expand size={16} />
                           <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white px-2 py-1 rounded text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">देखें</span>
                         </Link>
@@ -287,7 +296,7 @@ export default function MonitoringPage() {
             Showing {totalRecords === 0 ? 0 : (page - 1) * limit + 1} to {Math.min(page * limit, totalRecords)} of {totalRecords} entries
           </div>
           <div className="flex items-center gap-2">
-            <button 
+            <button
               onClick={() => setPage(Math.max(1, page - 1))}
               disabled={page === 1}
               className="p-1.5 bg-bg-panel border border-border-subtle rounded hover:bg-black/5 dark:hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -295,7 +304,7 @@ export default function MonitoringPage() {
               <ChevronLeft size={16} />
             </button>
             <span className="px-3 py-1 bg-black/10 dark:bg-white/10 rounded text-text-primary font-medium">{page} / {Math.max(1, totalPages)}</span>
-            <button 
+            <button
               onClick={() => setPage(Math.min(totalPages, page + 1))}
               disabled={page >= totalPages || totalPages === 0}
               className="p-1.5 bg-bg-panel border border-border-subtle rounded hover:bg-black/5 dark:hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed"

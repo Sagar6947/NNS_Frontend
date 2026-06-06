@@ -38,7 +38,7 @@ export default function Sidebar() {
   const getLinkClass = (path: string) => {
     return isActive(path)
       ? "flex items-center gap-3 px-4 py-3 text-orange-500 bg-orange-500/10 border border-orange-500/20 rounded-lg transition-colors font-medium"
-      : "flex items-center gap-3 px-4 py-3 text-text-muted hover:text-text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-lg transition-colors";
+      : "flex items-center gap-3 px-4 py-3 hover:text-text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-lg transition-colors";
   };
 
   return (
