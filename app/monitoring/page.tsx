@@ -119,9 +119,13 @@ export default function MonitoringPage() {
             </thead>
             <tbody className="divide-y divide-[#2d2e33]">
               {loading ? (
-                <tr>
-                  <td colSpan={12} className="px-4 py-8 text-center text-gray-500">लोड हो रहा है... (Loading...)</td>
-                </tr>
+                Array.from({ length: 5 }).map((_, i) => (
+                  <tr key={i} className="animate-pulse border-b border-[#2d2e33]">
+                    <td colSpan={12} className="px-4 py-4">
+                      <div className="h-12 bg-[#2d2e33]/50 rounded w-full"></div>
+                    </td>
+                  </tr>
+                ))
               ) : articles.length === 0 ? (
                 <tr>
                   <td colSpan={12} className="px-4 py-8 text-center text-gray-500">कोई डेटा नहीं मिला (No data found)</td>

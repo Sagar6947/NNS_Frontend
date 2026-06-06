@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { Search, Lock, User, LogIn, AlertCircle } from 'lucide-react';
+import { Search, Lock, User, LogIn, AlertCircle, Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('admin');
   const [password, setPassword] = useState('password123');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -76,13 +77,20 @@ export default function LoginPage() {
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                 <input 
-                  type="password" 
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-[#111113] border border-[#2d2e33] rounded-lg pl-10 pr-4 py-3 text-white focus:border-orange-500 focus:outline-none transition-colors"
+                  className="w-full bg-[#111113] border border-[#2d2e33] rounded-lg pl-10 pr-10 py-3 text-white focus:border-orange-500 focus:outline-none transition-colors"
                   placeholder="Enter password"
                   required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
             </div>
           </div>

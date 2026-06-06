@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
+import AuthWrapper from "@/components/AuthWrapper";
 
 export const metadata: Metadata = {
   title: "National Narrative Security (NNS)",
@@ -15,10 +16,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className="flex h-screen overflow-hidden bg-[#111113] text-white">
-        <Sidebar />
-        <main className="flex-1 overflow-y-auto">
-          {children}
-        </main>
+        <AuthWrapper>
+          <Sidebar />
+          <main className="flex-1 overflow-y-auto">
+            {children}
+          </main>
+        </AuthWrapper>
       </body>
     </html>
   );
