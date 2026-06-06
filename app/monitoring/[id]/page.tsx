@@ -90,7 +90,12 @@ export default function ArticleDetailsPage() {
           <span className="bg-[#202124] px-2 py-1 rounded border border-[#2d2e33]">{article.source_name || article.source_id}</span>
           <span>{article.ingested_at ? new Date(article.ingested_at).toLocaleDateString() : 'N/A'}</span>
           {article.raw_file_url && (
-            <a href={article.raw_file_url} target="_blank" rel="noopener noreferrer" className="text-blue-400 flex items-center gap-1 hover:underline">
+            <a 
+              href={article.raw_file_url.startsWith('http') ? article.raw_file_url : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'}${article.raw_file_url.startsWith('/') ? '' : '/'}${article.raw_file_url}`} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-blue-400 flex items-center gap-1 hover:underline"
+            >
               <ExternalLink size={14} /> मूल फ़ाइल देखें
             </a>
           )}
