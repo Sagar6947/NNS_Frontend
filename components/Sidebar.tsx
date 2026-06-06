@@ -11,13 +11,17 @@ import {
   UploadCloud, 
   Settings,
   LogOut,
-  MonitorPlay
+  MonitorPlay,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
+import { useTheme } from 'next-themes';
 
 export default function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
+  const { theme, setTheme } = useTheme();
 
   if (pathname === '/login') {
     return null;
@@ -34,11 +38,11 @@ export default function Sidebar() {
   const getLinkClass = (path: string) => {
     return isActive(path)
       ? "flex items-center gap-3 px-4 py-3 text-orange-500 bg-orange-500/10 border border-orange-500/20 rounded-lg transition-colors font-medium"
-      : "flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors";
+      : "flex items-center gap-3 px-4 py-3 text-text-muted hover:text-text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-lg transition-colors";
   };
 
   return (
-    <div className="w-64 h-screen bg-[#1a1b1e] border-r border-[#2d2e33] flex flex-col">
+    <div className="w-64 h-screen bg-bg-panel border-r border-border-subtle flex flex-col">
       <div className="p-6 flex items-center gap-3">
         <div className="w-8 h-8 rounded bg-orange-500/20 text-orange-500 flex items-center justify-center">
           <Search size={20} />
@@ -98,13 +102,23 @@ export default function Sidebar() {
         </Link>
       </nav>
 
-      <div className="p-4 m-4 rounded-lg bg-[#202124] border border-[#2d2e33]">
+      <div className="p-4 m-4 rounded-lg bg-bg-card border border-border-subtle">
         <div className="flex items-center gap-2 mb-2">
           <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
           <span className="text-green-500 font-medium text-sm">लाइव सुरक्षा सक्रिय</span>
         </div>
-        <p className="text-xs text-gray-500 mb-4">५० पोर्टल और २०० कीवर्ड्स निरंतर स्कैनिंग पर लगे हैं।</p>
+        <p className="text-xs text-text-muted mb-4">५० पोर्टल और २०० कीवर्ड्स निरंतर स्कैनिंग पर लगे हैं।</p>
         
+        <div className="flex gap-2 mb-4">
+          <button 
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="flex-1 flex items-center justify-center gap-2 bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 text-text-primary py-2 rounded-lg transition-colors text-sm font-medium border border-border-subtle"
+            title="Toggle Theme"
+          >
+            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
+        </div>
+
         <button 
           onClick={handleLogout}
           className="w-full flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 py-2 rounded-lg transition-colors text-sm font-medium border border-red-500/20"

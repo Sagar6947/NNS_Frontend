@@ -40,18 +40,18 @@ export default function ReportsPage() {
   if (loading) {
     return (
       <div className="p-8 max-w-7xl mx-auto h-full flex flex-col animate-pulse">
-        <div className="mb-8 border-b border-[#2d2e33] pb-4">
-          <div className="h-8 bg-[#2d2e33] rounded w-1/3 mb-2"></div>
-          <div className="h-4 bg-[#2d2e33] rounded w-1/2"></div>
+        <div className="mb-8 border-b border-border-subtle pb-4">
+          <div className="h-8 bg-border-subtle rounded w-1/3 mb-2"></div>
+          <div className="h-4 bg-border-subtle rounded w-1/2"></div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="h-32 bg-[#1a1b1e] rounded-xl border border-[#2d2e33]"></div>
-          <div className="h-32 bg-[#1a1b1e] rounded-xl border border-[#2d2e33]"></div>
+          <div className="h-32 bg-bg-panel rounded-xl border border-border-subtle"></div>
+          <div className="h-32 bg-bg-panel rounded-xl border border-border-subtle"></div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="h-64 bg-[#1a1b1e] rounded-xl border border-[#2d2e33]"></div>
-          <div className="h-64 bg-[#1a1b1e] rounded-xl border border-[#2d2e33]"></div>
-          <div className="h-64 bg-[#1a1b1e] rounded-xl border border-[#2d2e33] lg:col-span-2"></div>
+          <div className="h-64 bg-bg-panel rounded-xl border border-border-subtle"></div>
+          <div className="h-64 bg-bg-panel rounded-xl border border-border-subtle"></div>
+          <div className="h-64 bg-bg-panel rounded-xl border border-border-subtle lg:col-span-2"></div>
         </div>
       </div>
     );
@@ -61,61 +61,61 @@ export default function ReportsPage() {
 
   return (
     <div className="p-8 max-w-7xl mx-auto h-full flex flex-col">
-      <div className="mb-8 flex justify-between items-start border-b border-[#2d2e33] pb-4">
+      <div className="mb-8 flex justify-between items-start border-b border-border-subtle pb-4">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
+          <h1 className="text-3xl font-bold text-text-primary mb-2 flex items-center gap-3">
             <BarChart3 className="text-blue-500" />
             Credibility & Narrative Reports (C4)
           </h1>
-          <p className="text-gray-400">Auto-generated aggregate narrative metrics from normalized articles.</p>
+          <p className="text-text-muted">Auto-generated aggregate narrative metrics from normalized articles.</p>
         </div>
-        <button className="bg-[#202124] hover:bg-[#2d2e33] border border-[#2d2e33] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+        <button className="bg-bg-card hover:bg-black/5 dark:hover:bg-white/5 border border-border-subtle text-text-primary px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
           <Download size={16} /> Export PDF
         </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-[#1a1b1e] border border-[#2d2e33] p-6 rounded-xl shadow-lg">
-          <div className="flex items-center gap-3 text-blue-400 mb-2">
+        <div className="bg-bg-panel border border-border-subtle p-6 rounded-xl shadow-lg shadow-black/5 dark:shadow-black/20">
+          <div className="flex items-center gap-3 text-blue-500 mb-2">
             <FileText size={20} /> <h3 className="font-semibold">Total Processed</h3>
           </div>
-          <p className="text-4xl font-bold text-white">{report.total_articles}</p>
+          <p className="text-4xl font-bold text-text-primary">{report.total_articles}</p>
         </div>
 
-        <div className="bg-[#1a1b1e] border border-[#2d2e33] p-6 rounded-xl shadow-lg">
-          <div className="flex items-center gap-3 text-red-400 mb-2">
+        <div className="bg-bg-panel border border-border-subtle p-6 rounded-xl shadow-lg shadow-black/5 dark:shadow-black/20">
+          <div className="flex items-center gap-3 text-red-500 mb-2">
             <AlertTriangle size={20} /> <h3 className="font-semibold">Habitual Repeaters</h3>
           </div>
-          <p className="text-4xl font-bold text-white">{report.habitual_repeaters?.length || 0}</p>
+          <p className="text-4xl font-bold text-text-primary">{report.habitual_repeaters?.length || 0}</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         {/* Keywords */}
-        <div className="bg-[#1a1b1e] border border-[#2d2e33] p-6 rounded-xl shadow-lg">
-          <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2 border-b border-[#2d2e33] pb-2">
-            <TrendingUp size={20} className="text-orange-400" /> 
+        <div className="bg-bg-panel border border-border-subtle p-6 rounded-xl shadow-lg shadow-black/5 dark:shadow-black/20">
+          <h3 className="text-xl font-bold text-text-primary mb-4 flex items-center gap-2 border-b border-border-subtle pb-2">
+            <TrendingUp size={20} className="text-orange-500" /> 
             Top Evaluated Keywords
           </h3>
           <div className="space-y-4">
             {report.top_keywords?.map((kw: any, i: number) => (
               <div key={i} className="flex items-center justify-between">
-                <span className="text-gray-300 font-medium">{kw.keyword}</span>
-                <span className="bg-orange-500/20 text-orange-400 px-3 py-1 rounded-full text-sm font-bold">
+                <span className="text-text-secondary font-medium">{kw.keyword}</span>
+                <span className="bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20 px-3 py-1 rounded-full text-sm font-bold">
                   {kw.count} hits
                 </span>
               </div>
             ))}
             {(!report.top_keywords || report.top_keywords.length === 0) && (
-              <p className="text-sm text-gray-500">No keyword data available.</p>
+              <p className="text-sm text-text-muted">No keyword data available.</p>
             )}
           </div>
         </div>
 
         {/* Tone Distribution */}
-        <div className="bg-[#1a1b1e] border border-[#2d2e33] p-6 rounded-xl shadow-lg">
-          <h3 className="text-xl font-bold text-white mb-4 border-b border-[#2d2e33] pb-2">
+        <div className="bg-bg-panel border border-border-subtle p-6 rounded-xl shadow-lg shadow-black/5 dark:shadow-black/20">
+          <h3 className="text-xl font-bold text-text-primary mb-4 border-b border-border-subtle pb-2">
             Overall Narrative Tone Distribution
           </h3>
           <div className="space-y-4 mt-6">
@@ -129,11 +129,11 @@ export default function ReportsPage() {
               return (
                 <div key={i}>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-300 capitalize">{t.narrative_tone}</span>
-                    <span className="text-gray-400">{percentage}% ({t.count})</span>
+                    <span className="text-text-secondary capitalize">{t.narrative_tone}</span>
+                    <span className="text-text-muted">{percentage}% ({t.count})</span>
                   </div>
-                  <div className="w-full bg-[#111113] rounded-full h-2">
-                    <div className={`${color} h-2 rounded-full`} style={{ width: `${percentage}%` }}></div>
+                  <div className="w-full bg-black/5 dark:bg-white/5 rounded-full h-2 overflow-hidden border border-border-subtle">
+                    <div className={`${color} h-full rounded-full`} style={{ width: `${percentage}%` }}></div>
                   </div>
                 </div>
               )
@@ -142,28 +142,28 @@ export default function ReportsPage() {
         </div>
 
         {/* Repeaters */}
-        <div className="bg-[#1a1b1e] border border-[#2d2e33] p-6 rounded-xl shadow-lg lg:col-span-2">
-          <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2 border-b border-[#2d2e33] pb-2">
+        <div className="bg-bg-panel border border-border-subtle p-6 rounded-xl shadow-lg shadow-black/5 dark:shadow-black/20 lg:col-span-2">
+          <h3 className="text-xl font-bold text-text-primary mb-4 flex items-center gap-2 border-b border-border-subtle pb-2">
             <AlertTriangle size={20} className="text-red-500" /> 
             Habitual Repeaters (Anti-National Offenses &gt; 2)
           </h3>
           
           <div className="overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-[#202124] text-xs uppercase text-gray-500 font-medium">
+              <thead className="bg-bg-card text-xs uppercase text-text-muted font-medium border-b border-border-subtle">
                 <tr>
                   <th className="px-6 py-4">Source ID</th>
                   <th className="px-6 py-4">Anti-National Articles</th>
                   <th className="px-6 py-4">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#2d2e33]">
+              <tbody className="divide-y divide-border-subtle">
                 {report.habitual_repeaters?.map((r: any, i: number) => (
-                  <tr key={i} className="hover:bg-[#202124]/50">
-                    <td className="px-6 py-4 text-white font-mono text-sm">{r.source_id}</td>
-                    <td className="px-6 py-4 text-red-400 font-bold">{r.anti_national_count}</td>
+                  <tr key={i} className="hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                    <td className="px-6 py-4 text-text-primary font-mono text-sm">{r.source_id}</td>
+                    <td className="px-6 py-4 text-red-600 dark:text-red-400 font-bold">{r.anti_national_count}</td>
                     <td className="px-6 py-4">
-                      <span className="bg-red-500/10 text-red-500 border border-red-500/20 px-2 py-1 rounded text-xs">
+                      <span className="bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 px-2 py-1 rounded text-xs">
                         Flagged for Review
                       </span>
                     </td>
@@ -171,7 +171,7 @@ export default function ReportsPage() {
                 ))}
                 {(!report.habitual_repeaters || report.habitual_repeaters.length === 0) && (
                   <tr>
-                    <td colSpan={3} className="px-6 py-8 text-center text-gray-500">
+                    <td colSpan={3} className="px-6 py-8 text-center text-text-muted">
                       No habitual repeaters detected recently. Excellent!
                     </td>
                   </tr>

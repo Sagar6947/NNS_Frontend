@@ -88,10 +88,10 @@ export default function UploadPanel({ sourceType = 'epaper' }: { sourceType?: st
   };
 
   return (
-    <div className="bg-[#1a1b1e] border border-[#2d2e33] rounded-xl overflow-hidden mt-6 shadow-lg shadow-black/20">
-      <div className="p-4 border-b border-[#2d2e33] flex items-center gap-2 bg-[#202124]">
-        <FileIcon className="text-blue-400" />
-        <h3 className="font-semibold text-blue-400">
+    <div className="bg-bg-panel border border-border-subtle rounded-xl overflow-hidden mt-6 shadow-lg shadow-black/5 dark:shadow-black/20">
+      <div className="p-4 border-b border-border-subtle flex items-center gap-2 bg-bg-card">
+        <FileIcon className="text-blue-500" />
+        <h3 className="font-semibold text-blue-500">
           {sourceType === 'portal' 
             ? 'पोर्टल स्क्रीनशॉट अपलोड (Manual Portal Upload)'
             : 'ई-पेपर मैन्युअल अपलोड (Manual Upload PDF)'}
@@ -99,15 +99,15 @@ export default function UploadPanel({ sourceType = 'epaper' }: { sourceType?: st
       </div>
       
       <div className="p-6 space-y-6">
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-text-muted">
           सीधे स्थानीय ई-पेपर पीडीएफ/छवि फ़ाइल अपलोड करके विश्लेषण प्रक्रिया प्रारंभ करें। अपलोड के बाद OCR और OpenAI द्वारा लेख Articles DB में जोड़ा जाएगा।
         </p>
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <label className="text-xs font-medium text-gray-400 uppercase tracking-wider">Source / Publication:</label>
+            <label className="text-xs font-medium text-text-muted uppercase tracking-wider">Source / Publication:</label>
             <select 
-              className="w-full bg-[#111113] border border-[#2d2e33] rounded-lg p-3 text-sm focus:border-blue-500 focus:outline-none"
+              className="w-full bg-bg-base border border-border-subtle rounded-lg p-3 text-sm text-text-primary focus:border-blue-500 focus:outline-none"
               value={sourceId}
               onChange={(e) => setSourceId(e.target.value)}
             >
@@ -119,9 +119,9 @@ export default function UploadPanel({ sourceType = 'epaper' }: { sourceType?: st
           </div>
           
           <div className="space-y-2">
-            <label className="text-xs font-medium text-gray-400 uppercase tracking-wider">City Edition:</label>
+            <label className="text-xs font-medium text-text-muted uppercase tracking-wider">City Edition:</label>
             <select 
-              className="w-full bg-[#111113] border border-[#2d2e33] rounded-lg p-3 text-sm focus:border-blue-500 focus:outline-none"
+              className="w-full bg-bg-base border border-border-subtle rounded-lg p-3 text-sm text-text-primary focus:border-blue-500 focus:outline-none"
               value={cityEdition}
               onChange={(e) => setCityEdition(e.target.value)}
             >
@@ -133,16 +133,16 @@ export default function UploadPanel({ sourceType = 'epaper' }: { sourceType?: st
         </div>
 
         {sourceType === 'portal' && (
-          <div className="flex gap-4 mb-4 border-b border-[#2d2e33] pb-4">
+          <div className="flex gap-4 mb-4 border-b border-border-subtle pb-4">
             <button 
               onClick={() => setInputMode('file')}
-              className={`text-sm font-semibold pb-2 border-b-2 ${inputMode === 'file' ? 'border-blue-500 text-blue-400' : 'border-transparent text-gray-500 hover:text-gray-300'}`}
+              className={`text-sm font-semibold pb-2 border-b-2 ${inputMode === 'file' ? 'border-blue-500 text-blue-500' : 'border-transparent text-text-muted hover:text-text-secondary'}`}
             >
               Upload Screenshot
             </button>
             <button 
               onClick={() => setInputMode('url')}
-              className={`text-sm font-semibold pb-2 border-b-2 ${inputMode === 'url' ? 'border-blue-500 text-blue-400' : 'border-transparent text-gray-500 hover:text-gray-300'}`}
+              className={`text-sm font-semibold pb-2 border-b-2 ${inputMode === 'url' ? 'border-blue-500 text-blue-500' : 'border-transparent text-text-muted hover:text-text-secondary'}`}
             >
               Enter Article URL
             </button>
@@ -152,34 +152,34 @@ export default function UploadPanel({ sourceType = 'epaper' }: { sourceType?: st
         <div className="space-y-2">
           {inputMode === 'file' ? (
             <>
-              <label className="text-xs font-medium text-gray-400 uppercase tracking-wider">Select PDF or Image:</label>
+              <label className="text-xs font-medium text-text-muted uppercase tracking-wider">Select PDF or Image:</label>
               <div className="flex items-center justify-center w-full">
-                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-[#2d2e33] border-dashed rounded-lg cursor-pointer hover:bg-[#202124] transition-colors">
+                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-border-subtle border-dashed rounded-lg cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <UploadCloud className="w-8 h-8 mb-2 text-gray-500" />
-                    <p className="mb-2 text-sm text-gray-400">
-                      <span className="font-semibold text-blue-400">Click to upload</span> or drag and drop
+                    <UploadCloud className="w-8 h-8 mb-2 text-text-muted" />
+                    <p className="mb-2 text-sm text-text-muted">
+                      <span className="font-semibold text-blue-500">Click to upload</span> or drag and drop
                     </p>
-                    <p className="text-xs text-gray-500">PDF, PNG, JPG (MAX. 10MB)</p>
+                    <p className="text-xs text-text-muted">PDF, PNG, JPG (MAX. 10MB)</p>
                   </div>
                   <input type="file" className="hidden" accept=".pdf,image/*" onChange={handleFileChange} />
                 </label>
               </div>
               {file && (
-                <div className="text-sm text-green-400 mt-2 flex items-center gap-2">
+                <div className="text-sm text-green-500 mt-2 flex items-center gap-2">
                   <CheckCircle2 size={16} /> Selected: {file.name}
                 </div>
               )}
             </>
           ) : (
             <>
-              <label className="text-xs font-medium text-gray-400 uppercase tracking-wider">Article URL:</label>
+              <label className="text-xs font-medium text-text-muted uppercase tracking-wider">Article URL:</label>
               <input 
                 type="url" 
                 value={url} 
                 onChange={(e) => setUrl(e.target.value)} 
                 placeholder="https://example.com/news-article"
-                className="w-full bg-[#111113] border border-[#2d2e33] rounded-lg p-3 text-sm focus:border-blue-500 focus:outline-none text-gray-200"
+                className="w-full bg-bg-base border border-border-subtle rounded-lg p-3 text-sm focus:border-blue-500 focus:outline-none text-text-primary"
               />
             </>
           )}
@@ -207,11 +207,11 @@ export default function UploadPanel({ sourceType = 'epaper' }: { sourceType?: st
         </button>
 
         {status === 'success' && (
-           <div className="mt-4 p-4 bg-[#202124] rounded-lg border border-[#2d2e33]">
-             <p className="text-sm text-gray-300 mb-2">
+           <div className="mt-4 p-4 bg-bg-card rounded-lg border border-border-subtle">
+             <p className="text-sm text-text-secondary mb-2">
                Your file has been placed in the background processing queue. Our AI is now reading the text, extracting claims, and scoring the narratives against the defined master logics.
              </p>
-             <p className="text-sm text-gray-400">
+             <p className="text-sm text-text-muted">
                Extracted articles will automatically appear in the <strong>न्यूज़ मॉनिटरिंग (C1)</strong> dashboard once normalization completes.
              </p>
            </div>

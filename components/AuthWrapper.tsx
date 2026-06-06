@@ -25,7 +25,7 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
   // Show a loading state while checking authentication, except on the login page
   if (isChecking && pathname !== '/login') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#111113] p-4">
+      <div className="min-h-screen flex items-center justify-center bg-bg-base p-4">
         <div className="flex flex-col items-center animate-pulse">
           <div className="w-16 h-16 rounded-full bg-orange-500/20 text-orange-500 flex items-center justify-center mb-4">
             <Search size={32} />

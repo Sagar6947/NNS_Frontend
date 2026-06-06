@@ -1,19 +1,49 @@
 @import "tailwindcss";
 
-@theme {
-  --color-background: #111113;
-  --color-foreground: #ffffff;
-  --color-sidebar: #1a1b1e;
-  --color-card: #202124;
-  --color-border: #2d2e33;
-  --color-primary: #e67e22; /* Orange accent */
+:root {
+  /* Light Theme */
+  --bg-base: #f4f4f5;
+  --bg-panel: #ffffff;
+  --bg-card: #fdfdfd;
+  --border-subtle: #e4e4e7;
+  --text-primary: #18181b;
+  --text-secondary: #3f3f46;
+  --text-muted: #71717a;
+  
+  --color-primary: #e67e22;
   --color-primary-hover: #d35400;
   --color-success: #2ecc71;
   --color-danger: #e74c3c;
 }
 
+.dark {
+  /* Dark Theme */
+  --bg-base: #111113;
+  --bg-panel: #1a1b1e;
+  --bg-card: #202124;
+  --border-subtle: #2d2e33;
+  --text-primary: #ffffff;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
+}
+
+@theme {
+  --color-bg-base: var(--bg-base);
+  --color-bg-panel: var(--bg-panel);
+  --color-bg-card: var(--bg-card);
+  --color-border-subtle: var(--border-subtle);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-success: var(--color-success);
+  --color-danger: var(--color-danger);
+}
+
 body {
-  background-color: var(--color-background);
-  color: var(--color-foreground);
+  background-color: var(--bg-base);
+  color: var(--text-primary);
   font-family: Arial, Helvetica, sans-serif;
 }
