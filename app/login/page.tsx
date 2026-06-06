@@ -38,14 +38,14 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#111113] p-4">
-      <div className="w-full max-w-md bg-[#1a1b1e] rounded-2xl border border-[#2d2e33] overflow-hidden shadow-2xl">
-        <div className="p-8 pb-6 border-b border-[#2d2e33] flex flex-col items-center">
-          <div className="w-16 h-16 rounded-full bg-orange-500/20 text-orange-500 flex items-center justify-center mb-4">
+    <div className="min-h-screen flex items-center justify-center bg-bg-base p-4">
+      <div className="w-full max-w-md bg-bg-panel rounded-2xl border border-border-subtle overflow-hidden shadow-2xl shadow-black/5 dark:shadow-black/20">
+        <div className="p-8 pb-6 border-b border-border-subtle flex flex-col items-center">
+          <div className="w-16 h-16 rounded-full bg-orange-500/10 text-orange-600 dark:text-orange-400 flex items-center justify-center mb-4">
             <Search size={32} />
           </div>
-          <h1 className="text-2xl font-bold text-orange-500 tracking-tight text-center">नेरेटिव सुरक्षा (NNS)</h1>
-          <p className="text-gray-400 text-sm mt-1">National Narrative Security System</p>
+          <h1 className="text-2xl font-bold text-orange-600 dark:text-orange-400 tracking-tight text-center">नेरेटिव सुरक्षा (NNS)</h1>
+          <p className="text-text-muted text-sm mt-1">National Narrative Security System</p>
         </div>
 
         <form onSubmit={handleLogin} className="p-8 space-y-6">
@@ -58,14 +58,14 @@ export default function LoginPage() {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Username</label>
+              <label className="block text-xs font-medium text-text-muted uppercase tracking-wider mb-2">Username</label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" size={18} />
                 <input 
                   type="text" 
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full bg-[#111113] border border-[#2d2e33] rounded-lg pl-10 pr-4 py-3 text-white focus:border-orange-500 focus:outline-none transition-colors"
+                  className="w-full bg-bg-base border border-border-subtle rounded-lg pl-10 pr-4 py-3 text-text-primary focus:border-orange-500 focus:outline-none transition-colors"
                   placeholder="Enter username"
                   required
                 />
@@ -73,21 +73,21 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Password</label>
+              <label className="block text-xs font-medium text-text-muted uppercase tracking-wider mb-2">Password</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" size={18} />
                 <input 
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-[#111113] border border-[#2d2e33] rounded-lg pl-10 pr-10 py-3 text-white focus:border-orange-500 focus:outline-none transition-colors"
+                  className="w-full bg-bg-base border border-border-subtle rounded-lg pl-10 pr-10 py-3 text-text-primary focus:border-orange-500 focus:outline-none transition-colors"
                   placeholder="Enter password"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>

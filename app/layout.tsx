@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="flex h-screen overflow-hidden bg-bg-base text-text-primary">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <AuthWrapper>
             <Sidebar />
             <main className="flex-1 overflow-y-auto">
