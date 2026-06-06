@@ -20,7 +20,7 @@ export default function ArticleDetailsPage() {
 
   const fetchArticle = async (id: string) => {
     try {
-      const response = await axios.get(`http://localhost:5001/api/articles/${id}`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'}/api/articles/${id}`);
       setArticle(response.data);
     } catch (error) {
       console.error('Failed to fetch article details:', error);

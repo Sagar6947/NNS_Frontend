@@ -23,7 +23,7 @@ export default function UploadPanel({ sourceType = 'epaper' }: { sourceType?: st
     try {
       const token = localStorage.getItem('nns_token');
       const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
-      const res = await axios.get('http://localhost:5001/api/settings/sources', { headers });
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'}/api/settings/sources`, { headers });
       
       const filtered = res.data.filter((s: any) => s.source_type === sourceType);
       setAvailableSources(filtered);
@@ -70,7 +70,7 @@ export default function UploadPanel({ sourceType = 'epaper' }: { sourceType?: st
     setArticles([]);
 
     try {
-      const response = await axios.post('http://localhost:5001/api/upload-epaper', formData, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'}/api/upload-epaper`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

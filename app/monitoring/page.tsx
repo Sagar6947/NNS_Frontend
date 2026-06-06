@@ -16,7 +16,7 @@ export default function MonitoringPage() {
 
   const fetchArticles = async () => {
     try {
-      const response = await axios.get('http://localhost:5001/api/articles');
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'}/api/articles`);
       setArticles(response.data);
     } catch (error) {
       console.error('Failed to fetch articles:', error);

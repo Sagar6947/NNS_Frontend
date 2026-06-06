@@ -25,7 +25,7 @@ export default function ReportsPage() {
   const fetchReport = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:5001/api/reports/summary', getHeaders());
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'}/api/reports/summary`, getHeaders());
       setReport(res.data);
     } catch (e: any) {
       console.error(e);

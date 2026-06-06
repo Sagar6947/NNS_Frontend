@@ -20,7 +20,7 @@ export default function SettingsPage() {
   // Dummy logic state per keyword for UI simplicity
   const [newLogic, setNewLogic] = useState<{ [key: number]: string }>({});
 
-  const API_BASE = 'http://localhost:5001/api/settings';
+  const API_BASE = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'}/api/settings`;
 
   const getHeaders = () => {
     if (typeof window !== 'undefined') {
