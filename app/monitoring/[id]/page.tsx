@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import axios from 'axios';
 import { ArrowLeft, ExternalLink, Link as LinkIcon, Shuffle } from 'lucide-react';
 import Link from 'next/link';
+import { format } from 'date-fns';
 
 export default function ArticleDetailsPage() {
   const params = useParams();
@@ -20,7 +21,7 @@ export default function ArticleDetailsPage() {
 
   const fetchArticle = async (id: string) => {
     try {
-      const response = await axios.get(`http://localhost:5001/api/articles/${id}`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'}/api/articles/${id}`);
       setArticle(response.data);
     } catch (error) {
       console.error('Failed to fetch article details:', error);
@@ -35,7 +36,7 @@ export default function ArticleDetailsPage() {
 
   if (!article) {
     return (
-      <div className="p-8 text-gray-400">
+      <div className="p-8 text-text-muted">
         Article not found. <button onClick={() => router.back()} className="text-blue-500">Go back</button>
       </div>
     );
@@ -80,17 +81,22 @@ export default function ArticleDetailsPage() {
 
   return (
     <div className="p-8 max-w-[1600px] mx-auto pb-20">
-      <button onClick={() => router.back()} className="flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors text-sm">
+      <button onClick={() => router.back()} className="flex items-center gap-2 text-text-muted hover:text-text-primary mb-6 transition-colors text-sm">
         <ArrowLeft size={16} /> वापस जाएं (Back)
       </button>
 
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-white mb-2">{article.title}</h2>
-        <div className="text-gray-400 text-sm flex items-center gap-4">
-          <span className="bg-[#202124] px-2 py-1 rounded border border-[#2d2e33]">{article.source_name || article.source_id}</span>
-          <span>{article.ingested_at ? new Date(article.ingested_at).toLocaleDateString() : 'N/A'}</span>
+        <h2 className="text-2xl font-bold text-text-primary mb-2">{article.title}</h2>
+        <div className="text-text-muted text-sm flex items-center gap-4">
+          <span className="bg-bg-card px-2 py-1 rounded border border-border-subtle">{article.source_name || article.source_id}</span>
+          <span>{article.ingested_at ? format(new Date(article.ingested_at), 'd MMMM, yyyy hh:mm a') : 'N/A'}</span>
           {article.raw_file_url && (
-            <a href={article.raw_file_url} target="_blank" rel="noopener noreferrer" className="text-blue-400 flex items-center gap-1 hover:underline">
+            <a 
+              href={article.raw_file_url.startsWith('http') ? article.raw_file_url : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'}${article.raw_file_url.startsWith('/') ? '' : '/'}${article.raw_file_url}`} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-blue-400 flex items-center gap-1 hover:underline"
+            >
               <ExternalLink size={14} /> मूल फ़ाइल देखें
             </a>
           )}
@@ -100,36 +106,36 @@ export default function ArticleDetailsPage() {
       <div className="space-y-8">
         
         {/* Source Chain Visualizer */}
-        <div className="bg-[#1a1b1e] border border-[#2d2e33] rounded-xl p-6">
-          <h3 className="text-lg font-bold text-white mb-6">बहु-आयामी स्रोत श्रृंखला विज़ुअलाइज़र (Primary, Secondary & Tertiary Sources Chain)</h3>
+        <div className="bg-bg-panel border border-border-subtle rounded-xl p-6">
+          <h3 className="text-lg font-bold text-text-primary mb-6">बहु-आयामी स्रोत श्रृंखला विज़ुअलाइज़र (Primary, Secondary & Tertiary Sources Chain)</h3>
           
           <div className="flex items-center justify-between gap-4 max-w-5xl mx-auto">
             {/* Primary */}
-            <div className="flex-1 bg-[#111113] border border-[#2d2e33] rounded-xl p-5 relative">
+            <div className="flex-1 bg-bg-base border border-border-subtle rounded-xl p-5 relative">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-lg">NGO Funded</div>
-              <p className="text-xs text-gray-500 font-bold mb-3 uppercase tracking-wider text-center">प्राथमिक स्रोत (PRIMARY)</p>
-              <h4 className="text-white font-bold text-center mb-1">Western Alliance Think-Tank</h4>
-              <p className="text-gray-400 text-xs text-center">Sponsor of division studies</p>
+              <p className="text-xs text-text-muted font-bold mb-3 uppercase tracking-wider text-center">प्राथमिक स्रोत (PRIMARY)</p>
+              <h4 className="text-text-primary font-bold text-center mb-1">Western Alliance Think-Tank</h4>
+              <p className="text-text-muted text-xs text-center">Sponsor of division studies</p>
             </div>
 
             <ArrowRightIcon />
 
             {/* Secondary */}
-            <div className="flex-1 bg-[#111113] border border-[#2d2e33] rounded-xl p-5 relative">
+            <div className="flex-1 bg-bg-base border border-border-subtle rounded-xl p-5 relative">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-lg">Translated Feed</div>
-              <p className="text-xs text-gray-500 font-bold mb-3 uppercase tracking-wider text-center">द्वितीयक स्रोत (SECONDARY)</p>
-              <h4 className="text-white font-bold text-center mb-1">Global Syndicate Press</h4>
-              <p className="text-gray-400 text-xs text-center">Syndicated media distribution</p>
+              <p className="text-xs text-text-muted font-bold mb-3 uppercase tracking-wider text-center">द्वितीयक स्रोत (SECONDARY)</p>
+              <h4 className="text-text-primary font-bold text-center mb-1">Global Syndicate Press</h4>
+              <p className="text-text-muted text-xs text-center">Syndicated media distribution</p>
             </div>
 
             <ArrowRightIcon />
 
             {/* Tertiary */}
-            <div className="flex-1 bg-[#111113] border border-[#2d2e33] rounded-xl p-5 relative border-b-4 border-b-blue-500">
+            <div className="flex-1 bg-bg-base border border-border-subtle rounded-xl p-5 relative border-b-4 border-b-blue-500">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-500 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-lg">Local Affiliate</div>
-              <p className="text-xs text-gray-500 font-bold mb-3 uppercase tracking-wider text-center">तृतीयक स्रोत (TERTIARY)</p>
-              <h4 className="text-white font-bold text-center mb-1">The National Daily Post</h4>
-              <p className="text-gray-400 text-xs text-center">Regional online publisher</p>
+              <p className="text-xs text-text-muted font-bold mb-3 uppercase tracking-wider text-center">तृतीयक स्रोत (TERTIARY)</p>
+              <h4 className="text-text-primary font-bold text-center mb-1">The National Daily Post</h4>
+              <p className="text-text-muted text-xs text-center">Regional online publisher</p>
             </div>
           </div>
         </div>
@@ -138,12 +144,12 @@ export default function ArticleDetailsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
           {/* Left Column: Score Ring & Factors */}
-          <div className="col-span-4 bg-[#1a1b1e] border border-[#2d2e33] rounded-xl p-6 flex flex-col items-center justify-center relative shadow-lg shadow-black/20">
+          <div className="col-span-4 bg-bg-panel border border-border-subtle rounded-xl p-6 flex flex-col items-center justify-center relative shadow-lg shadow-black/5 dark:shadow-black/20">
             
             <div className="relative w-48 h-48 flex items-center justify-center">
               {/* SVG Ring */}
               <svg className="w-full h-full transform -rotate-90" viewBox="0 0 140 140">
-                <circle cx="70" cy="70" r="60" className="stroke-[#2d2e33] fill-none" strokeWidth="8" />
+                <circle cx="70" cy="70" r="60" className="stroke-border-subtle fill-none" strokeWidth="8" />
                 <circle 
                   cx="70" 
                   cy="70" 
@@ -157,8 +163,8 @@ export default function ArticleDetailsPage() {
               </svg>
               {/* Inner Text */}
               <div className="absolute flex flex-col items-center justify-center text-center">
-                <span className="text-4xl font-black text-white leading-none">{totalScore}</span>
-                <span className="text-sm text-gray-500 font-bold mt-1">/100</span>
+                <span className="text-4xl font-black text-text-primary leading-none">{totalScore}</span>
+                <span className="text-sm text-text-muted font-bold mt-1">/100</span>
               </div>
             </div>
 
@@ -166,63 +172,78 @@ export default function ArticleDetailsPage() {
               {scoreLabel}
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mt-8 w-full">
-              <div className="bg-[#111113] border border-[#2d2e33] rounded p-3 text-center">
-                <span className="text-[10px] text-gray-500 uppercase block mb-1">लाभार्थी देश / संस्था</span>
-                <span className="text-sm text-gray-300 font-medium">Western Lobbies</span>
-              </div>
-              <div className="bg-[#111113] border border-[#2d2e33] rounded p-3 text-center">
-                <span className="text-[10px] text-gray-500 uppercase block mb-1">लेखन का दृष्टिकोण</span>
-                <span className="text-sm text-gray-300 font-medium">Normative (छद्म आदर्शवाद)</span>
-              </div>
-              <div className="bg-[#111113] border border-[#2d2e33] rounded p-3 text-center">
-                <span className="text-[10px] text-gray-500 uppercase block mb-1">राजनीतिक लाभार्थी</span>
-                <span className="text-sm text-gray-300 font-medium">Left-leaning fronts</span>
-              </div>
-              <div className="bg-[#111113] border border-[#2d2e33] rounded p-3 text-center">
-                <span className="text-[10px] text-gray-500 uppercase block mb-1">आर्थिक लाभ / लाभार्थी</span>
-                <span className="text-sm text-gray-300 font-medium">Controlled markets</span>
-              </div>
+            <div className="flex flex-wrap gap-4 mt-8 w-full justify-center">
+               {(() => {
+                 try {
+                    const bens = typeof article.beneficiary_tags === 'string' ? JSON.parse(article.beneficiary_tags) : article.beneficiary_tags;
+                    if (!bens || bens.length === 0) return <div className="text-text-muted text-sm">No beneficiaries extracted</div>;
+                    return bens.map((b: string, i: number) => (
+                       <div key={i} className="bg-bg-base border border-border-subtle rounded px-4 py-2 text-center">
+                         <span className="text-[10px] text-text-muted uppercase block mb-1">संभावित लाभार्थी (Beneficiary)</span>
+                         <span className="text-sm text-text-secondary font-medium">{b}</span>
+                       </div>
+                    ));
+                 } catch(e) {
+                    return <div className="text-text-muted text-sm">No beneficiaries extracted</div>;
+                 }
+              })()}
             </div>
 
           </div>
 
-          {/* Right Column: Scoring Sliders */}
-          <div className="col-span-8 bg-[#1a1b1e] border border-[#2d2e33] rounded-xl p-8 shadow-lg shadow-black/20">
-            <div className="flex justify-between items-start mb-8">
+          {/* Right Column: Narrative Intelligence Details */}
+          <div className="col-span-8 bg-bg-panel border border-border-subtle rounded-xl p-8 shadow-lg shadow-black/5 dark:shadow-black/20">
+            <div className="flex justify-between items-start mb-6">
               <div>
-                <h3 className="text-lg font-bold text-white mb-1">बहु-आयामी विश्वसनीयता अंशांकन (Scoring Configuration)</h3>
+                <h3 className="text-lg font-bold text-text-primary mb-1">नैरेटिव इंटेलिजेंस (Narrative Intelligence extracted by AI)</h3>
               </div>
-              <p className="text-xs text-gray-400 max-w-[200px] text-right">अधिकारी इन स्लाइडर्स को डेटा साक्ष्य के आधार पर ओवरराइड कर सकते हैं।</p>
             </div>
 
-            <div className="space-y-8">
-              {sliders.map((slider, i) => (
-                <div key={i}>
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-sm font-bold text-gray-200 flex items-center gap-2">
-                      <LinkIcon size={14} className="text-gray-500" /> {slider.label}
-                    </h4>
-                    <span className="text-sm font-bold text-orange-400">{slider.val}/20</span>
-                  </div>
-                  <p className="text-[11px] text-gray-500 mb-3">{slider.desc}</p>
-                  
-                  {/* Slider Track */}
-                  <div className="h-1.5 w-full bg-[#111113] rounded-full overflow-hidden relative">
-                    <div 
-                      className="absolute top-0 left-0 h-full bg-gradient-to-r from-orange-600 to-orange-400 rounded-full" 
-                      style={{ width: `${(slider.val / 20) * 100}%` }}
-                    ></div>
-                  </div>
-                  {/* Slider Thumb (Visual Only) */}
-                  <div className="relative w-full -mt-2">
-                    <div 
-                      className="absolute w-3 h-3 bg-orange-400 rounded-full border-2 border-[#1a1b1e] shadow transform -translate-x-1.5"
-                      style={{ left: `${(slider.val / 20) * 100}%` }}
-                    ></div>
-                  </div>
+            <div className="space-y-6">
+              <div>
+                <h4 className="text-sm font-bold text-text-muted mb-2 uppercase tracking-wider">Purpose & Intent</h4>
+                <p className="text-text-primary bg-bg-card border border-border-subtle p-4 rounded-lg leading-relaxed text-sm">
+                  {article.purpose_judgment || "No purpose judgment recorded."}
+                </p>
+              </div>
+
+              <div>
+                <h4 className="text-sm font-bold text-text-muted mb-2 uppercase tracking-wider">Matched Master Keywords</h4>
+                <div className="flex flex-wrap gap-2">
+                  {(() => {
+                     try {
+                        const kws = typeof article.matched_keywords === 'string' ? JSON.parse(article.matched_keywords) : article.matched_keywords;
+                        if (!kws || kws.length === 0) return <span className="text-text-muted">None detected</span>;
+                        return kws.map((k: string, i: number) => (
+                           <span key={i} className="bg-orange-500/10 text-orange-600 dark:text-orange-400 px-3 py-1 rounded text-xs font-bold border border-orange-500/20">{k}</span>
+                        ));
+                     } catch(e) {
+                        return <span className="text-text-muted">None detected</span>;
+                     }
+                  })()}
                 </div>
-              ))}
+              </div>
+
+              <div>
+                <h4 className="text-sm font-bold text-text-muted mb-2 uppercase tracking-wider">Extracted Claims</h4>
+                <ul className="space-y-3">
+                  {(() => {
+                     try {
+                        const claims = typeof article.claims === 'string' ? JSON.parse(article.claims) : article.claims;
+                        if (!claims || claims.length === 0) return <li className="text-text-muted">No specific claims extracted</li>;
+                        return claims.map((c: any, i: number) => (
+                           <li key={i} className="bg-bg-base border border-border-subtle p-3 rounded-lg text-sm text-text-secondary">
+                             <div className="font-semibold text-text-primary mb-1">Claim: {c.claim || c}</div>
+                             {c.cited_source && <div className="text-xs text-blue-500 font-mono">Source cited: {c.cited_source}</div>}
+                           </li>
+                        ));
+                     } catch(e) {
+                        return <li className="text-text-muted">No specific claims extracted</li>;
+                     }
+                  })()}
+                </ul>
+              </div>
+
             </div>
 
           </div>
@@ -236,7 +257,7 @@ export default function ArticleDetailsPage() {
 
 function ArrowRightIcon() {
   return (
-    <div className="text-[#2d2e33]">
+    <div className="text-border-subtle">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <line x1="5" y1="12" x2="19" y2="12"></line>
         <polyline points="12 5 19 12 12 19"></polyline>
