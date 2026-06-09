@@ -195,7 +195,7 @@ export default function MonitoringPage() {
             <thead className="bg-bg-card text-xs uppercase  border-b border-border-subtle">
               <tr>
                 <th className="px-4 py-4 font-semibold whitespace-nowrap">क्र.सं. (S.No.)</th>
-                <th className="px-4 py-4 font-semibold whitespace-nowrap">दिनांक</th>
+                <th className="px-4 py-4 font-semibold whitespace-nowrap">दिनांक व समय</th>
                 <th className="px-4 py-4 font-semibold">समाचार स्रोत</th>
                 <th className="px-4 py-4 font-semibold">कीवर्ड</th>
                 <th className="px-4 py-4 font-semibold w-1/4">समाचार का शीर्षक</th>
@@ -248,7 +248,7 @@ export default function MonitoringPage() {
                     <tr key={article.article_id || idx} className="hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
                       <td className="px-4 py-4 text-center font-mono ">{(page - 1) * limit + idx + 1}</td>
                       <td className="px-4 py-4 whitespace-nowrap text-xs">
-                        {article.ingested_at ? format(new Date(article.ingested_at), 'yyyy-MM-dd') : 'N/A'}
+                        {article.ingested_at ? format(new Date(article.ingested_at), 'yyyy-MM-dd HH:mm') : 'N/A'}
                       </td>
                       <td className="px-4 py-4">
                         <div className="font-semibold text-text-primary">{article.source_name || article.source_id}</div>
