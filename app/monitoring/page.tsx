@@ -248,7 +248,7 @@ export default function MonitoringPage() {
                     <tr key={article.article_id || idx} className="hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
                       <td className="px-4 py-4 text-center font-mono ">{(page - 1) * limit + idx + 1}</td>
                       <td className="px-4 py-4 whitespace-nowrap text-xs">
-                        {article.ingested_at ? format(new Date(article.ingested_at), 'yyyy-MM-dd HH:mm') : 'N/A'}
+                        {article.ingested_at ? format(new Date(article.ingested_at), 'd MMMM, yyyy hh:mm a') : 'N/A'}
                       </td>
                       <td className="px-4 py-4">
                         <div className="font-semibold text-text-primary">{article.source_name || article.source_id}</div>

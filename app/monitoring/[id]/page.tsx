@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import axios from 'axios';
 import { ArrowLeft, ExternalLink, Link as LinkIcon, Shuffle } from 'lucide-react';
 import Link from 'next/link';
+import { format } from 'date-fns';
 
 export default function ArticleDetailsPage() {
   const params = useParams();
@@ -88,7 +89,7 @@ export default function ArticleDetailsPage() {
         <h2 className="text-2xl font-bold text-text-primary mb-2">{article.title}</h2>
         <div className="text-text-muted text-sm flex items-center gap-4">
           <span className="bg-bg-card px-2 py-1 rounded border border-border-subtle">{article.source_name || article.source_id}</span>
-          <span>{article.ingested_at ? new Date(article.ingested_at).toLocaleDateString() : 'N/A'}</span>
+          <span>{article.ingested_at ? format(new Date(article.ingested_at), 'd MMMM, yyyy hh:mm a') : 'N/A'}</span>
           {article.raw_file_url && (
             <a 
               href={article.raw_file_url.startsWith('http') ? article.raw_file_url : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'}${article.raw_file_url.startsWith('/') ? '' : '/'}${article.raw_file_url}`} 
